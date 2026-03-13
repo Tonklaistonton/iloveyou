@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เป็นแฟนกันนะ</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe6e6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            overflow: hidden;
+            transition: background-color 1.5s ease;
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+        h1 {
+            color: #ff4d4d;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-yes {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        .btn-yes:hover {
+            background-color: #ff3333;
+            transform: scale(1.05);
+        }
+        .btn-no {
+            background-color: #e0e0e0;
+            color: #333;
+            transition: left 0.1s ease, top 0.1s ease, transform 0.2s ease;
+        }
+        #result {
+            display: none;
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        #result h1 {
+            margin-bottom: 20px;
+        }
+        #result img {
+            max-width: 280px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="question-section">
+            <h1>เป็นแฟนกันนะ? ❤️</h1>
+            <div class="btn-group">
+                <button class="btn btn-yes" onclick="sayYes()">ตกลง</button>
+                <button class="btn btn-no" id="btn-no" onmouseover="moveNo()" onclick="moveNo()">ไม่</button>
+            </div>
+        </div>
+        
+        <div id="result">
+            <h1>เย้! ดีใจที่สุดเลย 🎉<br>พรุ่งนี้เจอกันนะ!</h1>
+            <img src="https://media1.tenor.com/m/pN7xf12qQcwAAAAC/cuddle-cute.gif" alt="กอดกันน่ารัก">
+        </div>
+    </div>
+
+    <script>
+        function shootFireworks() {
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              var particleCount = 50 * (timeLeft / duration);
+              
+              confetti(Object.assign({}, defaults, { 
+                  particleCount, 
+                  origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                  colors: ['#ff0000', '#ff69b4', '#ff1493'],
+                  shapes: ['heart']
+              }));
+              
+              confetti(Object.assign({}, defaults, { 
+                  particleCount, 
+                  origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                  colors: ['#ff0000', '#ff69b4', '#ff1493'],
+                  shapes: ['heart']
+              }));
+              
+              confetti({
+                  particleCount: 30,
+                  spread: 120,
+                  origin: { y: 0.6 },
+                  colors: ['#ffffff', '#ffb6c1']
+              });
+            }, 250);
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('btn-no');
+            const x = Math.random() * (window.innerWidth - btn.clientWidth);
+            const y = Math.random() * (window.innerHeight - btn.clientHeight);
+            
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function sayYes() {
+            document.getElementById('question-section').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.body.style.backgroundColor = '#ffb3b3';
+            
+            const audio = new Audio('pleng-ruk.mp3');
+            audio.currentTime = 54;
+            audio.play();
+
+            shootFireworks();
+        }
+    </script>
+</body>
+</html>
